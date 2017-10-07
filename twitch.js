@@ -10,6 +10,16 @@ function auth() {
     .then(res => res.data);
 }
 
+function getStream() {
+  const client_id = process.env.CLIENT_ID;
+
+  return axios.get('https://api.twitch.tv/helix/streams?user_login=brookzerker', {
+      headers: {"Client-ID": client_id}
+      })
+    .then(res => res.data.data[0]);
+}
+
 module.exports = {
-  auth
+  auth,
+  getStream
 };

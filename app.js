@@ -9,8 +9,7 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 
 app.get('/api/stream-status', (req, res, next) => {
-    .then(response => {
-      console.log(response.data);
+    .then(token => {
     })
     .catch(err => next(err));
 });
