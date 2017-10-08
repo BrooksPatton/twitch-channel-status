@@ -16,7 +16,7 @@ function getStream() {
   return axios.get('https://api.twitch.tv/helix/streams?user_login=brookzerker', {
       headers: {"Client-ID": client_id}
       })
-    .then(res => res.data.data[0]);
+    .then(res => res.data.data[0])
 }
 
 module.exports = {

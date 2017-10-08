@@ -1,19 +1,21 @@
-require('dotenv').config()
-
 const express = require('express');
 const cors = require('cors');
+const twitch = require('./twitch');
 
 const app = express();
-const port = process.env.PORT || 3001;
 
 app.use(cors());
 
-app.get('/api/stream-status', (req, res, next) => {
-    .then(token => {
+app.get('/api/streaming-status', (req, res, next) => {
+  twitch.getStream()
+    .then(stream => {
+      const response = {
+        status: stream ? true : false
+      };
+
+      res.json(response);
     })
     .catch(err => next(err));
 });
 
-app.listen(port, () => {
-  console.log(`API listening on http://localhost:${port}`);
-});
+module.exports = app;
