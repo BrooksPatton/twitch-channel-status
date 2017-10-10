@@ -15,7 +15,11 @@ app.get('/api/streaming-status', (req, res, next) => {
 
       res.json(response);
     })
-    .catch(err => next(err));
+    .catch(err => {
+      console.error('Error getting twitch stream');
+      console.error(err);
+      next(err);
+    });
 });
 
 module.exports = app;
