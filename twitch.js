@@ -1,5 +1,11 @@
 const axios = require('axios');
 
+const cache = {
+  lastSaved: null,
+  data: null
+};
+
+
 function auth() {
   const baseUrl = 'https://api.twitch.tv/kraken/oauth2/token/';
   const client_id = process.env.CLIENT_ID;
@@ -13,10 +19,33 @@ function auth() {
 function getStream() {
   const client_id = process.env.CLIENT_ID;
 
-  return axios.get('https://api.twitch.tv/helix/streams?user_login=brookzerker', {
-      headers: {"Client-ID": client_id}
+  if(shouldUseCache(cache)) {
+    return Promise.resolve(cache.data);
+  } else {
+    return axios.get('https://api.twitch.tv/helix/streams?user_login=brookzerker', {
+        headers: {"Client-ID": client_id}
+        })
+      .then(res => res.data.data[0])
+      .then(data => {
+        cache.lastSaved = Date.now();
+        cache.data = data;
+        return cache.data;
       })
-    .then(res => res.data.data[0])
+      .catch(err => {
+        if(err.response.status === 503) {
+          return cache.data;
+        }
+
+        throw err;
+      });
+  }
+}
+
+function shouldUseCache(cache) {
+  const now = Date.now();
+  const validTime = 1000 * 60 * 5; // 5 minutes
+
+  return now - cache.lastSaved <= validTime;
 }
 
 module.exports = {

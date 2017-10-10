@@ -27,7 +27,9 @@ describe('Twich Auth', function() {
   });
 });
 
-describe('Twitch Get Streams', () => {
+describe('Twitch Get Streams', function() {
+  this.timeout(oneMinute);
+
   it('should result in stream information about brookzerkers stream', done => {
     getStream()
       .then(stream => {
